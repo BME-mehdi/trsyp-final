@@ -23,8 +23,8 @@ export default async function ClinicianLayout({ children }: { children: ReactNod
   }
   return (
     <Providers session={{ csrf: s.csrf, practitionerId: s.principal.practitionerId, idleTimeoutS: IDLE_TIMEOUT_S }}>
-      <header className="flex flex-wrap items-center gap-4 border-b border-divider px-4 py-3">
-        <p className="text-lg font-semibold text-accent">SymbioMed</p>
+      <header className="sticky top-0 z-10 flex flex-wrap items-center gap-4 border-b border-divider bg-page px-6 py-3 shadow-card">
+        <p className="flex items-center gap-2 text-lg font-semibold"><span aria-hidden="true" className="inline-block h-6 w-6 rounded-md bg-accent" /><span className="text-accent">SymbioMed</span><span className="rounded-full bg-surface px-2 py-0.5 text-sm font-semibold text-muted">Clinician</span></p>
         <nav aria-label="Main" className="flex gap-4">
           <Link href="/" className="underline-offset-4 hover:underline">Worklist</Link>
           {process.env.NEXT_PUBLIC_FEATURE_BENCH === '1' && <Link href="/bench" className="underline-offset-4 hover:underline">Bench (USB)</Link>}
@@ -33,7 +33,7 @@ export default async function ClinicianLayout({ children }: { children: ReactNod
           <SignOutButton />
         </div>
       </header>
-      <main className="mx-auto max-w-7xl px-4 py-6">{children}</main>
+      <main className="mx-auto max-w-7xl px-6 py-8">{children}</main>
     </Providers>
   )
 }
