@@ -5,8 +5,7 @@ import { CartesianGrid, Legend, Line, LineChart, ReferenceLine, ResponsiveContai
 import { useApi } from '../../lib/client'
 import { formatDay } from '../../lib/format'
 
-/** Flexion goal shown to clinicians: 110° at week 6 (Model C threshold). To confirm: docs/OPEN_QUESTIONS.md item 16. */
-const FLEXION_GOAL_DEG = 110
+import { FLEXION_GOAL_DEG } from './goal'
 
 type Point = { day: string; [k: string]: number | string | null }
 type Series = { key: string; name: string; dashed?: boolean; color: string }

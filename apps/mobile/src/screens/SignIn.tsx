@@ -1,7 +1,8 @@
 import * as AuthSession from 'expo-auth-session'
 import * as WebBrowser from 'expo-web-browser'
 import { useState } from 'react'
-import { CONFIG, redirectUri, useAuth } from '../auth'
+import { CONFIG, DEMO_DISCOVERY, redirectUri, useAuth } from '../auth'
+import { DEMO } from '../demo'
 import { useSettings } from '../settings'
 import { Button, Screen, Txt } from '../ui'
 
@@ -12,7 +13,7 @@ export function SignInScreen() {
   const { t } = useSettings()
   const { status, completeSignIn, unlock, signOut } = useAuth()
   const [error, setError] = useState(false)
-  const discovery = AuthSession.useAutoDiscovery(CONFIG.issuer)
+  const discovery = AuthSession.useAutoDiscovery(DEMO ? DEMO_DISCOVERY : CONFIG.issuer)
   const [request, , promptAsync] = AuthSession.useAuthRequest({ clientId: CONFIG.clientId, redirectUri: redirectUri(), scopes: ['openid'], usePKCE: true }, discovery)
 
   const signIn = async () => {

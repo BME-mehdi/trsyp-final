@@ -11,6 +11,8 @@
     "lint": "eslint .",
     "test": "turbo run test",
     "dev:mock": "pnpm --filter @symbiomed/web dev:mock",
+    "demo": "pnpm --filter @symbiomed/web demo",
+    "demo:patient": "pnpm --filter @symbiomed/mobile demo:web",
     "test:hapi": "pnpm --filter @symbiomed/web test:hapi",
     "seed": "pnpm --filter @symbiomed/web seed",
     "e2e": "pnpm --filter @symbiomed/web e2e",

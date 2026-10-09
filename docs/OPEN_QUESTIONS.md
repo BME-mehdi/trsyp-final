@@ -54,6 +54,31 @@ Unknowns the team must confirm (CLAUDE.md rule 7). Where code needs a value now,
 35. **HMAC:** a reserved 32-byte field, zeros for now (decision D-11).
 36. **react-native-ble-plx 3.5.1 with React Native 0.86 (new architecture)** is unverified until it runs on a device.
 
+
+## Open: UI elevation (2026-10-09)
+37. **Secondary stop request from the app (firmware team).** Should the app offer a secondary stop request over BLE? It would be slower than the hardware STOP (under 10 ms), depends on the unfinished BLE link, and must never be presented as the main way to stop. Not built in this phase.
+38. **Emergency number.** Proposal for item 15: show 190 (SAMU, Tunisia) on the Emergency screen. Not shown until the team confirms.
+39. **Tested NMES range on the dummy load.** `form_answers_improved.md` has a `TODO(team)` where the range actually tested goes. Not filled in by the UI team.
+40. **Rest day ("I am too tired today").** Built as UI only (local state, labelled demo). A real version needs a new outcome type in CONTRACT.md, a BFF route with Zod validation and a FHIR mapping.
+41. **Badge, streak and journey thresholds** (7 days active, 10 ratings, 10 checklists, full week = 14 sessions of 2 a day) are behaviour counts chosen by the UI team, not clinical criteria. Confirm.
+
+## Left for after submission (UI elevation, 2026-10-09)
+UI only, labelled "demo" or "coming soon" on screen:
+- **Rest day** (patient app): kept in memory on the phone. No outcome type in CONTRACT.md, no BFF route, no FHIR mapping, not on the clinician dashboard (the worklist says so).
+- **Weekly report** (web): deterministic template built in the browser from existing routes, labelled "AI draft, demo data". Not done: `server/extension/weekly-report.ts`, Anthropic SDK call, `ANTHROPIC_API_KEY`, AuditEvent on generate and view, logging of the useful / not useful vote.
+- **Worklist flags**: computed in the browser from the sessions route. No rest-day flag.
+- **"10 checklists" badge**: checklist completions are not recorded, so it shows "coming soon".
+- **Coming-soon card** (home exercises, pain-relief mode, step-by-step guide): text only, nothing behind it.
+- **Streak and expired plans**: the domain function protects days without a valid plan, but the app only receives the current plan, so it does not pass plan history yet.
+
+Skipped:
+- 190 on the Emergency screen (item 38) and the tested NMES range (item 39): wait for the team.
+- Screenshots of every patient screen at 100 % and 200 % text size; check on a device.
+- Reanimated: React Native's built-in Animated is used instead (no Babel plugin or native setup).
+- Phase D items 2 and 3 (Expo web target, demo seed with a rest day and a stored weekly report). Expo Go with the mock brace is not re-checked on a device.
+- Out-of-scope list: not built. Leaderboards and intensity points are excluded for good (rehab-gamification skill).
+- Mobile jest times out under turbo's parallel run on Windows (before this work too); `npx jest --ci -w 2` in `apps/mobile` passes.
+
 ## Open: needed before later phases (not asked yet)
 - Hosted auth provider (the dev realm is in `docker/keycloak`).
 - Clinician roles beyond `clinician` and `admin`, and the hosting target.
@@ -99,3 +124,8 @@ Unknowns the team must confirm (CLAUDE.md rule 7). Where code needs a value now,
 - Dark theme; Arabic strings and right-to-left layout.
 - `docs/PLAN.md` was never written (the planning run was interrupted).
 - The spec PDF is at the repository root, while CLAUDE.md expects it in `docs/`. `claude.md` is lowercase, so Claude Code does not load it automatically.
+
+## Demo mode (2026-10-09, for the demo video)
+- `pnpm demo` (clinician web): mock mode **without the one-time code**. The session records `demo-no-otp`, never `otp`; only this mode accepts it for plan approval. `pnpm dev:mock` and e2e keep the real check.
+- `pnpm demo:patient` (patient app in a browser, Expo web): synthetic fixture data in memory (`EXPO_PUBLIC_DEMO=1`), no server, no sign-in, no Bluetooth. A rating updates the data until reload.
+- Neither mode exists in a real build. Remove both before any use beyond the demo.

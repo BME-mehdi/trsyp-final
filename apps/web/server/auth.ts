@@ -3,6 +3,7 @@ import { createRemoteJWKSet, jwtVerify, type JWTPayload } from 'jose'
 import { z } from 'zod'
 import { STEP_UP_MAX_AGE_S, config } from './config'
 import { HttpError } from './errors'
+import { demoNoOtp } from './mock-mode'
 import { SESSION_COOKIE, cookieValue, readSession } from './session'
 
 export type Role = 'patient' | 'clinician' | 'admin'
@@ -98,7 +99,8 @@ export async function principalFromToken(token: string): Promise<Principal> {
  */
 export function requireStepUp(p: Principal, now = Date.now()) {
   const fresh = p.authTime !== null && now / 1000 - p.authTime <= STEP_UP_MAX_AGE_S
-  if (!p.amr.includes('otp') || !fresh) {
+  const mfa = p.amr.includes('otp') || (demoNoOtp() && p.amr.includes('demo-no-otp'))
+  if (!mfa || !fresh) {
     throw new HttpError(401, 'step_up_required', 'Re-authenticate with your second factor to approve a plan', {
       headers: { 'www-authenticate': `Bearer error="insufficient_user_authentication", error_description="MFA within ${STEP_UP_MAX_AGE_S} s required", max_age=${STEP_UP_MAX_AGE_S}` },
     })

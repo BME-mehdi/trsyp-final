@@ -57,3 +57,13 @@ export function progress(sessions: readonly SessionSummary[], aTargetPct: number
     week: first ? Math.min(6, Math.floor((now.getTime() - Date.parse(first.startedAt)) / (7 * DAY)) + 1) : null,
   }
 }
+
+export type NextAction = { kind: 'rate' } | { kind: 'checklist'; n: number } | { kind: 'wait'; from: Date } | { kind: 'allDone' }
+
+/** The one next action on Today, chosen by state. It never starts anything: the checklist leads to the brace's own button. */
+export function nextAction(view: Extract<TodayView, { kind: 'active' }>, sessions: readonly SessionSummary[]): NextAction {
+  if (sessionToRate(sessions)) return { kind: 'rate' }
+  if (view.sessionsToday >= LIMITS.sessionsPerDay) return { kind: 'allDone' }
+  if (view.nextFrom) return { kind: 'wait', from: view.nextFrom }
+  return { kind: 'checklist', n: view.sessionsToday + 1 }
+}

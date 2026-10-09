@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
+import { AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold, useFonts } from '@expo-google-fonts/atkinson-hyperlegible'
 import { useState } from 'react'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 import { colors } from '@symbiomed/ui-tokens'
@@ -19,8 +20,9 @@ function Gate() {
   return (
     <Stack screenOptions={{ headerBackTitle: t('common.back') }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="checklist" options={{ title: t('checklist.title') }} />
-      <Stack.Screen name="after-session" options={{ title: t('feedback.title') }} />
+      {/* The screen draws its own large title; the header keeps the back button and an accessible title. */}
+      <Stack.Screen name="checklist" options={{ title: t('checklist.title'), headerTitle: '' }} />
+      <Stack.Screen name="after-session" options={{ title: t('feedback.title'), headerTitle: '' }} />
     </Stack>
   )
 }
@@ -44,7 +46,10 @@ function Session({ queryClient }: { queryClient: QueryClient }) {
 }
 
 export default function RootLayout() {
+  // Atkinson Hyperlegible; on a load error the system font is used (the app still renders).
+  const [fontsLoaded, fontError] = useFonts({ AtkinsonHyperlegible_400Regular, AtkinsonHyperlegible_700Bold })
   const [queryClient] = useState(() => new QueryClient({ defaultOptions: { queries: { retry: 1, gcTime: 5 * 60_000 } } }))
+  if (!fontsLoaded && !fontError) return null
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>

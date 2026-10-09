@@ -10,6 +10,7 @@
   --color-control: #6b7785;
   --color-accent: #1a5f8a;
   --color-on-accent: #ffffff;
+  --color-deep: #0f3a57;
   --color-positive-fg: #1d6b33;
   --color-positive-bg: #e3f3e7;
   --color-info-fg: #1b4f99;
@@ -20,7 +21,9 @@
   --color-neutral-bg: #eceff2;
   --color-critical-fg: #a1161b;
   --color-critical-bg: #fbe5e5;
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-sans: var(--font-atkinson), system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --shadow-card: 0 1px 2px rgb(26 31 36 / 0.06), 0 1px 3px rgb(26 31 36 / 0.08);
+  --radius-card: 12px;
 }
 
 html { color: var(--color-ink); background: var(--color-page); font-size: 100%; }

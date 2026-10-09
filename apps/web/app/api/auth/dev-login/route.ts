@@ -1,6 +1,6 @@
 import { config } from '../../../../server/config'
 import { json } from '../../../../server/errors'
-import { mockMode } from '../../../../server/mock-mode'
+import { demoNoOtp, mockMode } from '../../../../server/mock-mode'
 import { safeReturnTo } from '../../../../server/oidc'
 import { SESSION_COOKIE, cookieValue, createSession, destroySession, sessionCookie } from '../../../../server/session'
 import { totpOk } from '../../../../server/totp'
@@ -14,7 +14,7 @@ export async function POST(req: Request): Promise<Response> {
   const account = DEMO_ACCOUNTS[String(form.get('username') ?? '') as keyof typeof DEMO_ACCOUNTS]
   const passwordOk = account && form.get('password') === account.password
   const otp = String(form.get('otp') ?? '')
-  const otpOk = account && (!account.totpSecret || totpOk(account.totpSecret, otp))
+  const otpOk = account && (!account.totpSecret || demoNoOtp() || totpOk(account.totpSecret, otp))
   if (!passwordOk || !otpOk) {
     return Response.redirect(new URL(`/dev-login?${new URLSearchParams({ returnTo, error: '1', ...(form.get('stepUp') ? { stepUp: '1' } : {}) })}`, config().APP_URL), 303)
   }
@@ -26,7 +26,7 @@ export async function POST(req: Request): Promise<Response> {
     patientId: 'patient_id' in c ? c.patient_id : null,
     practitionerId: 'practitioner_id' in c ? c.practitioner_id : null,
     authTime: Math.floor(Date.now() / 1000),
-    amr: c.amr,
+    amr: demoNoOtp() ? [...c.amr.filter((m) => m !== 'otp'), 'demo-no-otp'] : c.amr,
   })
   return new Response(null, { status: 303, headers: { location: new URL(returnTo, config().APP_URL).toString(), 'set-cookie': sessionCookie(s.id), 'cache-control': 'no-store' } })
 }

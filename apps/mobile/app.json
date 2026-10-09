@@ -38,7 +38,8 @@
           "modes": [],
           "bluetoothAlwaysPermission": "Connect to your SymbioMed brace to send the approved plan and receive session data."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": false

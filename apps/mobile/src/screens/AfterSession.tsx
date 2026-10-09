@@ -9,6 +9,7 @@ import { useAuth } from '../auth'
 import { outcomeOk, sessionToRate } from '../logic'
 import { useSettings } from '../settings'
 import { Button, Card, Screen, Txt } from '../ui'
+import { SavedScreen } from './Saved'
 
 const COMFORT = ['comfort.0', 'comfort.1', 'comfort.2', 'comfort.3'] as const
 
@@ -28,7 +29,7 @@ export function AfterSessionScreen() {
 
   if (sessions.isPending) return <Screen title={t('feedback.title')}><Txt>{t('common.loading')}</Txt></Screen>
   const target = sessions.data ? sessionToRate(sessions.data.sessions) : null
-  if (send.isSuccess) return <Screen title={t('feedback.title')}><Txt size="large" accessibilityRole="alert">{t('feedback.saved')}</Txt></Screen>
+  if (send.isSuccess) return <SavedScreen pain={pain} sessions={sessions.data?.sessions ?? []} />
   if (!target) return <Screen title={t('feedback.title')}><Txt size="large">{t('feedback.noSession')}</Txt></Screen>
 
   const valid = outcomeOk({ sessionId: target.sessionId, comfort, pain, note })

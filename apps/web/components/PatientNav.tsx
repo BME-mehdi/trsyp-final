@@ -9,6 +9,7 @@ const TABS = [
   ['/sessions', 'Sessions'],
   ['/safety', 'Safety events'],
   ['/charts', 'Charts'],
+  ['/report', 'Weekly report'],
   ['/decisions', 'Decision log'],
   ['/audit', 'Audit'],
 ] as const
@@ -20,8 +21,12 @@ export function PatientNav({ patientId }: { patientId: string }) {
   const base = `/patients/${patientId}`
   return (
     <div className="mb-6">
-      <p className="text-sm text-muted">Patient</p>
-      <p className="text-xl font-semibold">{label ?? patientId}</p>
+      <nav aria-label="Breadcrumb" className="text-muted">
+        <Link href="/" className="underline-offset-4 hover:text-accent hover:underline">Worklist</Link>
+        <span aria-hidden="true" className="px-2">/</span>
+        <span aria-current="page">{label ?? patientId}</span>
+      </nav>
+      <p className="mt-1 text-3xl font-bold">{label ?? patientId}</p>
       <nav aria-label="Patient" className="mt-3 flex flex-wrap gap-1 border-b border-divider">
         {TABS.map(([href, name]) => {
           const current = path === base + href

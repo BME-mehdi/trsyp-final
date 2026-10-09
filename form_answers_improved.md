@@ -75,20 +75,21 @@ A description of the **current results and limitations** of your solution, inclu
 * The orthosis is designed, 3D-printed and assembled, with the electronics mounted on it.
 * The sEMG module has been tested on a real muscle and gives clean RMS and median-frequency readings.
 * Knee angle is measured by fusing the hinge potentiometer with the IMU. The filter was tuned against a goniometer.
-* The NMES module has been tested on a dummy load across the 10–50 mA range. [confirm: the earlier answer said 10–60 mA; the module maximum is 57.6 mA, so the chosen range should state what was actually tested]
+* The NMES module has been tested on a dummy load across the TODO(team: state the current range actually tested on the dummy load; the module maximum is 57.6 mA and the plan cap is 50 mA) range.
 * All safety layers are implemented: the hardware 65 mA trip, the 60 mA firmware cut, the enable gate, the STOP button, the USB lockout and the watchdog. They have not yet been verified on the assembled device.
 * The firmware is complete. It covers the session state machine, the 100 ms supervision loop, the assist rule, Model A running on the board, and logging.
 
-*AI layer (validated on simulated patients only)*
+*AI layer (tested on simulated patients only)*
 
 * Model A classifies muscle state with 93.5 % accuracy (simulated).
 * Model B suggests the next session's settings:
-  * Intensity ceiling within 5 mA of the ideal value in 97 % of sessions, against 56 % for the fixed protocol.
-  * Rest time exact in 86 % of sessions and always within one step.
-  * Number of contractions exact in 93 % of sessions.
+  * Intensity ceiling within 5 mA of the ideal value in 97 % of sessions, against 56 % for the fixed protocol (simulated).
+  * Rest time exact in 86 % of sessions and always within one step (simulated).
+  * Number of contractions exact in 93 % of sessions (simulated).
 * Clinicians accepted all three suggestions in 64 % of sessions at first, and in 92 % after the model was retrained on their decisions (simulated clinician).
 * Compared with the fixed protocol, painful sessions dropped from 47 % to 1 % in simulation, with slightly higher muscle activation at week 6 (85 % vs 83 %).
-* Model C predicts knee bend at week 6 within 2.2° on average. Its alert for patients likely to stay below 110° is correct 90 % of the time (simulated).
+* Model C predicts knee bend at week 6 within 2.2° on average (simulated). Its alert for patients likely to stay below 110° is correct 90 % of the time (simulated).
+* These figures check that the loop behaves as designed; they say nothing about real patients.
 
 *Software*
 

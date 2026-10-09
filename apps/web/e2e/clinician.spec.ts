@@ -128,3 +128,14 @@ test('screenshots of the next-session panel at desktop and tablet widths', async
     await page.screenshot({ path: `../../docs/screenshots/next-session-${name}.png`, fullPage: true })
   }
 })
+
+test('weekly report tab: template draft labelled demo, points cite facts, no serious axe violation', async ({ page }) => {
+  await signIn(page)
+  await page.goto(`/patients/${SYN['SYN-03']}/report`)
+  await expect(page.getByRole('heading', { name: 'Weekly report' })).toBeVisible()
+  await expect(page.getByText('AI draft, demo data: check against the charts')).toBeVisible()
+  await expect(page.getByText(/No language model was called/)).toBeVisible()
+  await expect(page.getByRole('link', { name: 'F4' }).first()).toHaveAttribute('href', `/patients/${SYN['SYN-03']}/safety`)
+  const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa', 'wcag22aa']).analyze()
+  expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([])
+})

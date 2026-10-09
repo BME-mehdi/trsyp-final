@@ -4,7 +4,7 @@
 Two interfaces for a research prototype knee brace that delivers NMES after total knee arthroplasty:
 - Clinician web app (Next.js, App Router, TypeScript).
 - Patient mobile app (Expo, React Native, TypeScript), with a responsive patient web view reusing the same packages.
-The spec is `docs/SymbioMed_Spec_v3.0_Final_MVP.pdf`. The data contract is `docs/CONTRACT.md`. If they disagree, stop and ask.
+The spec is `SymbioMed_Spec_v3.0_Final_MVP.pdf` (repo root). The data contract is `docs/CONTRACT.md`. If they disagree, stop and ask.
 
 ## Non-negotiables
 1. **Research prototype, not a medical device.** Every screen shows a persistent banner: "Research prototype. Not a medical device. Stimulation into a dummy load only." Never write "safe", "clinically validated", "certified", "compliant", "secure" or "medical grade" in UI text, docs or comments. Say "designed with reference to".
@@ -46,5 +46,5 @@ Rules: packages never import from apps. `domain` imports nothing. Each package h
 - Verification commands: `pnpm typecheck && pnpm lint && pnpm test`, plus `pnpm e2e` (web) and `pnpm --filter mobile test` when relevant. Report the real output. Never claim a test passed that you did not run.
 - Don't add libraries without saying why in the commit message. Prefer the platform and what is already installed.
 - Accessibility: WCAG 2.2 AA targets, 44 pt touch targets on mobile, readable at 200 % text size (patients are 55–85 years). Never use colour alone to carry status.
-- Style: minimal. One accent colour, status colours only for the five evidence/safety states. No illustrations, no animations except focus and loading.
+- Style. Clinician web: calm and dense, motion only for focus, loading and state changes. Patient app: warm and encouraging. Allowed: icons, simple original illustrations (no stock or copyrighted art), purposeful motion under 400 ms (progress fills, completion celebration, screen transitions) and light haptics. Every animation respects the system reduce-motion setting and has a static equivalent. Status colours stay reserved for the five status tones. Gamification follows .claude/skills/rehab-gamification/SKILL.md.
 - When you finish a phase, update `docs/OPEN_QUESTIONS.md` and list what you did not do.

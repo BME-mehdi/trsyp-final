@@ -28,3 +28,4 @@ jest.mock('@react-native-community/slider', () => {
   const React = jest.requireActual('react')
   return { __esModule: true, default: (p: object) => React.createElement(View, p) }
 })
+jest.mock('expo-haptics', () => ({ impactAsync: jest.fn(async () => undefined), ImpactFeedbackStyle: { Light: 'light' } }))

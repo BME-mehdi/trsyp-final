@@ -7,7 +7,9 @@ const HEADERS = { accept: 'application/fhir+json', 'content-type': 'application/
 async function call<T>(url: string, init?: RequestInit): Promise<T | null> {
   let res: Response
   try {
-    res = await fetch(url, { ...init, headers: HEADERS, cache: 'no-store' })
+    // Mock mode only: the in-memory FHIR handlers, called directly (see mocks/node.ts).
+    const mock = (globalThis as { __symbiomedMockFhir?: (u: string, i?: RequestInit) => Promise<Response> }).__symbiomedMockFhir
+    res = await (mock ?? fetch)(url, { ...init, headers: HEADERS, cache: 'no-store' })
   } catch {
     throw new HttpError(503, 'upstream_unavailable', 'FHIR server unreachable')
   }
