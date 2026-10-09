@@ -1,0 +1,10 @@
+{
+  "name": "@symbiomed/brace-protocol",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": { ".": "./src/index.ts" },
+  "scripts": { "typecheck": "tsc -p .", "test": "vitest run" },
+  "dependencies": { "@symbiomed/domain": "workspace:*" },
+  "devDependencies": { "@symbiomed/fixtures": "workspace:*" }
+}

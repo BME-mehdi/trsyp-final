@@ -1,0 +1,13 @@
+packages:
+  - apps/*
+  - packages/*
+# Install scripts stay blocked. esbuild (via tsx) works from its prebuilt platform package.
+allowBuilds:
+  esbuild: false
+# Accepted audit findings (review again by 2027-01-31; docs/SECURITY_CHECKLIST.md, item SUP-3).
+# Both are high, have no patched version, and come only through Expo build and test tooling
+# (@expo/cli, the jest preset), not through code shipped in the app bundles.
+auditConfig:
+  ignoreGhsas:
+    - GHSA-86w9-cpqp-85rv # node-forge, via @expo/cli (dev certificates)
+    - GHSA-vfj7-8cjw-p6xm # braces, via the React Native jest preset

@@ -1,0 +1,34 @@
+{
+  "name": "symbiomed-ui",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint .",
+    "test": "turbo run test",
+    "dev:mock": "pnpm --filter @symbiomed/web dev:mock",
+    "test:hapi": "pnpm --filter @symbiomed/web test:hapi",
+    "seed": "pnpm --filter @symbiomed/web seed",
+    "e2e": "pnpm --filter @symbiomed/web e2e",
+    "scan": "node scripts/scan.mjs",
+    "scan:bundles": "node scripts/scan.mjs --bundles",
+    "e2e:prod": "pnpm --filter @symbiomed/web e2e:prod",
+    "audit:high": "pnpm audit --audit-level high",
+    "sbom:generate": "pnpm sbom --sbom-format cyclonedx --out sbom/symbiomed.cdx.json"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "24.19.1",
+    "@vitest/coverage-v8": "5.0.3",
+    "eslint": "10.12.0",
+    "turbo": "2.11.7",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.71.1",
+    "vite": "8.3.3",
+    "vitest": "5.0.3"
+  }
+}

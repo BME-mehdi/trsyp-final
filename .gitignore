@@ -1,0 +1,12 @@
+node_modules
+coverage
+.turbo
+*.tsbuildinfo
+.next
+next-env.d.ts
+.env.local
+test-results
+playwright-report
+apps/mobile/dist
+apps/mobile/.expo
+sbom

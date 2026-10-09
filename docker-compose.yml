@@ -1,0 +1,22 @@
+# Local development only: HAPI FHIR (R4) and Keycloak (OIDC). Demo credentials, no TLS, data not persisted.
+# Start: docker compose up -d   Seed: pnpm --filter @symbiomed/web seed   Without Docker: pnpm dev:mock
+name: symbiomed
+services:
+  hapi:
+    image: hapiproject/hapi:v8.12.0-2
+    ports: ["127.0.0.1:8090:8080"]
+    environment:
+      hapi.fhir.fhir_version: R4
+      hapi.fhir.client_id_strategy: ALPHANUMERIC
+      hapi.fhir.enforce_referential_integrity_on_write: "true"
+      # HAPI strips versions from references (CarePlan/x/_history/n); @symbiomed/fhir also carries the
+      # plan version in a `plan-version` extension, so nothing is lost.
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.8.0
+    command: ["start-dev", "--import-realm", "--http-port=8180"]
+    ports: ["127.0.0.1:8180:8180"]
+    environment:
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin # dev only
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin # dev only
+    volumes: ["./docker/keycloak:/opt/keycloak/data/import:ro"]

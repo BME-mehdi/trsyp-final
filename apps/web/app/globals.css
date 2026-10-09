@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+/* Values copied from @symbiomed/ui-tokens; test/tokens.test.ts fails if they drift. */
+@theme {
+  --color-ink: #1a1f24;
+  --color-muted: #4a5560;
+  --color-page: #ffffff;
+  --color-surface: #f4f6f8;
+  --color-divider: #d5dbe1;
+  --color-control: #6b7785;
+  --color-accent: #1a5f8a;
+  --color-on-accent: #ffffff;
+  --color-positive-fg: #1d6b33;
+  --color-positive-bg: #e3f3e7;
+  --color-info-fg: #1b4f99;
+  --color-info-bg: #e5eefa;
+  --color-caution-fg: #7a4a00;
+  --color-caution-bg: #fdf1d6;
+  --color-neutral-fg: #3d4752;
+  --color-neutral-bg: #eceff2;
+  --color-critical-fg: #a1161b;
+  --color-critical-bg: #fbe5e5;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html { color: var(--color-ink); background: var(--color-page); font-size: 100%; }
+body { font-size: 1rem; line-height: 1.4; }
+:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

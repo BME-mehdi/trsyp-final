@@ -1,0 +1,7 @@
+{
+  "cli": { "version": ">= 16.0.0" },
+  "build": {
+    "development": { "developmentClient": true, "distribution": "internal", "env": { "EXPO_PUBLIC_MOCK": "1" } },
+    "preview": { "distribution": "internal" }
+  }
+}

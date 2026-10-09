@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "SymbioMed",
+    "slug": "symbiomed",
+    "scheme": "symbiomed",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "bundleIdentifier": "org.symbiomed.prototype",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "Unlock the SymbioMed app with Face ID.",
+        "NSBluetoothAlwaysUsageDescription": "Connect to your SymbioMed brace to send the approved plan and receive session data."
+      }
+    },
+    "android": {
+      "package": "org.symbiomed.prototype",
+      "allowBackup": false,
+      "permissions": [
+        "USE_BIOMETRIC",
+        "BLUETOOTH_SCAN",
+        "BLUETOOTH_CONNECT"
+      ]
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Unlock the SymbioMed app with Face ID."
+        }
+      ],
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "modes": [],
+          "bluetoothAlwaysPermission": "Connect to your SymbioMed brace to send the approved plan and receive session data."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": false
+    }
+  }
+}
