@@ -13,6 +13,7 @@ const WORDING_EXEMPT = {
   'claude.md': 'project rules: defines the list',
   'docs/CONTRACT.md': 'data contract: defines the list',
   'docs/NOT_CLAIMED.md': 'lists what is not claimed, word for word',
+  'docs/FIRMWARE_BLE_PROMPT.md': 'firmware prompt: quotes the list for the firmware team',
   'form_answers_improved.md': 'team form answers, not written by this project',
   'scripts/scan.mjs': 'this scanner',
   'apps/web/e2e/helpers.ts': 'test pattern of the list',
