@@ -10,7 +10,7 @@ import { Txt } from './ui'
 // Progress visuals. Each one is decorative: the number or state is always written next to it as text,
 // and the graphic is hidden from screen readers.
 /** Tweens a number to `target` over `ms` (ease-out cubic), frame by frame. With ms = 0 it jumps. Works on native and web. */
-function useTween(target: number, ms: number, delay: number) {
+export function useTween(target: number, ms: number, delay: number) {
   const [v, setV] = useState(ms === 0 ? target : 0)
   useEffect(() => {
     if (ms === 0) { setV(target); return }
@@ -81,6 +81,25 @@ export function ArcGauge({ value, goal, max }: { value: number; goal: number; ma
       <Path d={arc(value / max)} stroke={warm.fill} strokeWidth={14} fill="none" strokeLinecap="round" />
       <Circle cx={gx} cy={gy} r={6} fill={colors.background} stroke={colors.text} strokeWidth={3} />
     </Svg>
+    </View>
+  )
+}
+
+/** A large ring with content in its centre (the hero's "1 of 2"). Fill and track colours come from the caller. */
+export function BigRing({ value, size = 128, fill, track, children }: { value: number; size?: number; fill: string; track: string; children: React.ReactNode }) {
+  const { reduce } = useMotion()
+  const stroke = 12, r = (size - stroke) / 2, c = 2 * Math.PI * r
+  const v = useTween(value, reduce ? 0 : motion.duration.slow, 150)
+  return (
+    <View style={{ width: size, height: size }}>
+      <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        <Svg width={size} height={size}>
+          <Circle cx={size / 2} cy={size / 2} r={r} stroke={track} strokeWidth={stroke} fill="none" />
+          <Circle cx={size / 2} cy={size / 2} r={r} stroke={fill} strokeWidth={stroke} fill="none" strokeLinecap="round"
+            strokeDasharray={`${c} ${c}`} strokeDashoffset={c * (1 - v)} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
+        </Svg>
+      </View>
+      <View style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>{children}</View>
     </View>
   )
 }

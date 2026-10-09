@@ -4,7 +4,7 @@ import { chromium } from '@playwright/test'
 
 const [out = 'patient-shots', ...routes] = process.argv.slice(2)
 const browser = await chromium.launch()
-const page = await browser.newPage({ viewport: { width: 400, height: 860 }, deviceScaleFactor: 2 })
+const page = await browser.newPage({ viewport: { width: 400, height: Number(process.env.H ?? 860) }, deviceScaleFactor: 2 })
 const errors: string[] = []
 page.on('pageerror', (e) => errors.push(e.message.split('\n')[0] ?? ''))
 for (const r of routes.length ? routes : ['/']) {

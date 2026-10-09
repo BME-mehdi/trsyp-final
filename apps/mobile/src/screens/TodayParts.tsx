@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { PROGRAM_WEEKS, badges, weeklyRecap, type BadgeId, type EngagementInput, type TodayRings } from '@symbiomed/domain'
-import { colors, elevation, iconSize, radius, radiusLg, space, status, touchTarget, warm } from '@symbiomed/ui-tokens'
+import { badges, weeklyRecap, type BadgeId, type EngagementInput } from '@symbiomed/domain'
+import { colors, iconSize, radius, radiusLg, space, status, touchTarget, warm } from '@symbiomed/ui-tokens'
 import { router } from 'expo-router'
 import { useState, type ComponentProps } from 'react'
 import { Pressable, View } from 'react-native'
@@ -8,22 +8,6 @@ import { FadeIn } from '../anim'
 import { REST_REASONS, addRestDay, needsGuidance, type RestReason } from '../rest'
 import { useSettings } from '../settings'
 import { Button, Card, Txt } from '../ui'
-import { Ring } from '../visuals'
-
-export function TodayRingsCard({ rings }: { rings: TodayRings }) {
-  const { t } = useSettings()
-  const st = (done: boolean) => t(done ? 'today.ring.done' : 'today.ring.notYet')
-  return (
-    <Card>
-      <Txt bold>{t('today.rings')}</Txt>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.md, justifyContent: 'space-around' }}>
-        <Ring value={rings.sessionsDone >= 1 ? 1 : 0} label={t('today.ring.session1')} state={st(rings.sessionsDone >= 1)} />
-        <Ring delay={120} value={rings.sessionsDone >= 2 ? 1 : 0} label={t('today.ring.session2')} state={st(rings.sessionsDone >= 2)} />
-        <Ring delay={240} value={rings.rated ? 1 : 0} label={t('today.ring.rating')} state={st(rings.rated)} />
-      </View>
-    </Card>
-  )
-}
 
 /** Persistent STOP guidance. The app cannot stop the brace; this only opens the guidance screen. */
 export function StopChip() {
@@ -99,34 +83,6 @@ export function BadgeList({ input }: { input: EngagementInput }) {
         })}
       </View>
     </Card>
-  )
-}
-
-/** Greeting, program week as six segments, and gentle streak text. Accent surface, white text (pair in the contrast test). */
-export function HeroCard({ hour, week, streakDays, daysActiveWeek, hasHistory }: { hour: number; week: number | null; streakDays: number; daysActiveWeek: number | null; hasHistory: boolean }) {
-  const { t } = useSettings()
-  const on = { color: colors.onAccent }
-  return (
-    <View style={{ backgroundColor: colors.accent, borderRadius: radiusLg.xl, padding: space.xl, gap: space.md, ...elevation.mid.rn }}>
-      <Txt size="title" bold style={on}>{t(hour < 12 ? 'today.morning' : hour < 18 ? 'today.afternoon' : 'today.evening')}</Txt>
-      {week !== null && (
-        <View style={{ gap: space.sm }} accessible accessibilityLabel={t('progress.week', { week })}>
-          <Txt bold style={on}>{t('progress.week', { week })}</Txt>
-          <View style={{ flexDirection: 'row', gap: space.xs }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-            {Array.from({ length: PROGRAM_WEEKS }, (_, i) => (
-              <View key={i} style={{ flex: 1, height: 8, borderRadius: 4, backgroundColor: i < week ? colors.onAccent : 'rgba(255,255,255,0.3)' }} />
-            ))}
-          </View>
-        </View>
-      )}
-      {(streakDays > 0 || hasHistory) && (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.sm }}>
-          <Ionicons name="leaf" size={iconSize.md} color={colors.onAccent} accessibilityElementsHidden importantForAccessibility="no" />
-          <Txt style={[on, { flexShrink: 1 }]}>{streakDays > 0 ? t('today.streak', { days: streakDays }) : t('today.welcomeBack')}</Txt>
-        </View>
-      )}
-      {daysActiveWeek !== null && <Txt style={on}>{t('today.daysActiveWeek', { days: daysActiveWeek })}</Txt>}
-    </View>
   )
 }
 

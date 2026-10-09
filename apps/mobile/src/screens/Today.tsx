@@ -12,7 +12,8 @@ import { useRestDays } from '../rest'
 import { useSettings } from '../settings'
 import { Button, Card, Chip, Screen, Txt } from '../ui'
 import { FadeIn } from '../anim'
-import { HeroCard, RecapCard, RestDayCard, StopChip, TodayRingsCard } from './TodayParts'
+import { BraceCard, HeroCard, SessionList, WeekCard, type Item } from './TodayCards'
+import { RestDayCard, StopChip } from './TodayParts'
 
 const Big = ({ label, value }: { label: string; value: string }) => (
   <View accessible accessibilityLabel={`${label}: ${value}`}>
@@ -64,11 +65,28 @@ export function TodayScreen() {
   const s = streak(input)
   const thisWeek = journey(input).find((w) => w.state === 'current')
   const restedToday = rest.some((r) => r.day === today)
+  const rings = todayRings(input)
+  const todays = list.filter((x) => dayKey(x.startedAt, offsetMin) === today)
+  const hm = new Intl.DateTimeFormat(lang === 'fr' ? 'fr-FR' : 'en-GB', { hour: '2-digit', minute: '2-digit' })
+  const detail = t('today.sessionDetail', { count: p.contractions, seconds: p.offS })
+  const sessionItem = (n: 1 | 2): Item => {
+    const title = t(n === 1 ? 'today.ring.session1' : 'today.ring.session2')
+    const done = todays[n - 1]
+    if (done) return { key: `s${n}`, title, detail, state: 'done', status: t('today.status.completed', { time: hm.format(new Date(done.startedAt)) }) }
+    const next = !restedToday && action.kind === 'checklist' && action.n === n
+    return { key: `s${n}`, title, detail, state: next ? 'next' : 'todo', status: t(next ? 'today.status.upNext' : 'today.status.toDo') }
+  }
+  const rateNext = action.kind === 'rate'
+  const items: Item[] = [sessionItem(1), sessionItem(2), rings.rated
+    ? { key: 'rate', title: t('today.rateItem'), detail: null, state: 'done', status: t('today.status.done') }
+    : { key: 'rate', title: t('today.rateItem'), detail: null, state: rateNext ? 'next' : 'todo', status: t(rateNext ? 'today.status.upNext' : 'today.status.toDo') }]
+  const last = list.at(-1)
+  const hour = now.getHours()
   return (
-    <Screen title={t('nav.today')}>
-      <FadeIn index={0}><HeroCard hour={now.getHours()} week={week} streakDays={s.days} daysActiveWeek={thisWeek?.daysActive ?? null} hasHistory={list.length > 0} /></FadeIn>
+    <Screen title={t(hour < 12 ? 'today.morning' : hour < 18 ? 'today.afternoon' : 'today.evening')}>
+      <FadeIn index={0}><HeroCard done={rings.sessionsDone} week={week} streakDays={s.days} daysActiveWeek={thisWeek?.daysActive ?? null} hasHistory={list.length > 0} /></FadeIn>
       <FadeIn index={1}><StopChip /></FadeIn>
-      <FadeIn index={2}><TodayRingsCard rings={todayRings(input)} /></FadeIn>
+      <FadeIn index={2}><SessionList items={items} /></FadeIn>
       <FadeIn index={3}>
       {restedToday ? (
         <Card><Txt bold>{t('rest.saved')}</Txt><Txt>{t('rest.planUnchanged')}</Txt><Txt size="small" muted>{t('rest.demo')}</Txt></Card>
@@ -82,7 +100,8 @@ export function TodayScreen() {
         <Button label={t('today.next.checklist', { n: action.n })} onPress={() => router.push('/checklist')} />
       )}
       </FadeIn>
-      {now.getDay() === 1 && <FadeIn index={4}><RecapCard input={input} title="recap.monday" /></FadeIn>}
+      <FadeIn index={4}><WeekCard input={input} /></FadeIn>
+      <FadeIn index={5}><BraceCard lastBend={last ? Math.round(last.flexionMaxDeg) : null} lastSession={last ? fmt.format(new Date(last.endedAt)) : null} /></FadeIn>
       <FadeIn index={5}>
       <Card>
         <Pressable onPress={() => setPlanOpen((o) => !o)} accessibilityRole="button" accessibilityState={{ expanded: planOpen }} accessibilityLabel={t(planOpen ? 'today.planHide' : 'today.planShow')}

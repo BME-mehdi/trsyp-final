@@ -16,7 +16,7 @@ describe('Today (gamified)', () => {
   it('shows the rings with text, one next action and the STOP guidance chip', async () => {
     await renderScreen(<TodayScreen />)
     expect(await screen.findByText('Session 1')).toBeTruthy()
-    expect(screen.getByText('Rating')).toBeTruthy()
+    expect(screen.getByText('Rate the session')).toBeTruthy()
     expect(screen.getByText('Get ready for session 1')).toBeTruthy()
     expect(screen.getByText('To stop: red STOP button on the brace')).toBeTruthy()
   })
