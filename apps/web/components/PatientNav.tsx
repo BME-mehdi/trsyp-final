@@ -9,6 +9,7 @@ const TABS = [
   ['/sessions', 'Sessions'],
   ['/safety', 'Safety events'],
   ['/charts', 'Charts'],
+  ['/report', 'Weekly report'],
   ['/decisions', 'Decision log'],
   ['/audit', 'Audit'],
 ] as const

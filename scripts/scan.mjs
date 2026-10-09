@@ -19,6 +19,8 @@ const WORDING_EXEMPT = {
   'scripts/scan.mjs': 'this scanner',
   'apps/web/e2e/helpers.ts': 'test pattern of the list',
   'packages/i18n/src/i18n.test.ts': 'test pattern of the list',
+  'apps/web/features/weekly-report/report.ts': 'weekly-report guard: pattern of the list',
+  'apps/web/features/weekly-report/report.test.ts': 'test of the weekly-report guard',
 }
 // Technical names that contain a listed word but make no claim.
 const TECHNICAL = [/expo-secure-store/g, /react-native-safe-area-context/g, /httpOnly, Secure/gi, /\bSecure;/g, /HttpOnly; Secure/g, /secure: (true|false)/g, /\bcookie\.secure\b/g, /isSecureContext/g, /cookie\.httpOnly, cookie\.secure/g]
