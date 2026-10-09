@@ -3,9 +3,10 @@
 // and for secrets. Exit code 1 on any finding. Usage: node scripts/scan.mjs [--bundles]
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join, relative } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-const ROOT = new URL('..', import.meta.url).pathname
-const SKIP_DIRS = new Set(['node_modules', '.git', '.next', '.turbo', 'dist', 'coverage', 'test-results', 'playwright-report', '.expo', 'screenshots', 'sbom'])
+const ROOT = fileURLToPath(new URL('..', import.meta.url))
+const SKIP_DIRS = new Set(['node_modules', '.git', '.next', '.turbo', 'dist', 'coverage', 'test-results', 'playwright-report', '.expo', 'screenshots', 'sbom', '.agents'])
 const TEXT = /\.(ts|tsx|js|mjs|json|md|yml|yaml|css|html|example)$/
 
 // Files that must quote the forbidden list itself, or are not ours.
@@ -21,7 +22,7 @@ const WORDING_EXEMPT = {
 }
 // Technical names that contain a listed word but make no claim.
 const TECHNICAL = [/expo-secure-store/g, /react-native-safe-area-context/g, /httpOnly, Secure/gi, /\bSecure;/g, /HttpOnly; Secure/g, /secure: (true|false)/g, /\bcookie\.secure\b/g, /isSecureContext/g, /cookie\.httpOnly, cookie\.secure/g]
-const FORBIDDEN = /(?<![\p{L}\p{N}_])(safe|safely|validated|certified|compliant|secure|secured|clinical-grade|clinically validated|medical[- ]grade|improves recovery|sûre?s?|sécurisée?s?|sans danger|certifiée?s?|validée?s?|conformes?)(?![\p{L}\p{N}_])/giu
+const FORBIDDEN = /(?<![\p{L}\p{N}_])(safe|safely|validated|certified|compliant|secure|secured|clinical-grade|clinically validated|medical[- ]grade|improves recovery|reduces pain|autonomous|sûre?s?|sécurisée?s?|sans danger|certifiée?s?|validée?s?|conformes?)(?![\p{L}\p{N}_])/giu
 
 const SECRETS = [
   [/-----BEGIN [A-Z ]*PRIVATE KEY-----/, 'private key'],
@@ -42,7 +43,7 @@ const walk = (dir) => readdirSync(dir).flatMap((f) => {
 
 const findings = []
 for (const file of walk(ROOT)) {
-  const rel = relative(ROOT, file)
+  const rel = relative(ROOT, file).replaceAll('\\', '/') // forward slashes on Windows too
   if (rel === 'pnpm-lock.yaml') continue
   if (/(^|\/)\.env(?!\.example)/.test(rel)) findings.push(`${rel}: environment file must not be committed (.env.example only)`)
   const text = readFileSync(file, 'utf8')

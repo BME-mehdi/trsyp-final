@@ -54,6 +54,13 @@ Unknowns the team must confirm (CLAUDE.md rule 7). Where code needs a value now,
 35. **HMAC:** a reserved 32-byte field, zeros for now (decision D-11).
 36. **react-native-ble-plx 3.5.1 with React Native 0.86 (new architecture)** is unverified until it runs on a device.
 
+
+## Open: UI elevation (2026-10-09)
+37. **Secondary stop request from the app (firmware team).** Should the app offer a secondary stop request over BLE? It would be slower than the hardware STOP (under 10 ms), depends on the unfinished BLE link, and must never be presented as the main way to stop. Not built in this phase.
+38. **Emergency number.** Proposal for item 15: show 190 (SAMU, Tunisia) on the Emergency screen. Not shown until the team confirms.
+39. **Tested NMES range on the dummy load.** `form_answers_improved.md` has a `TODO(team)` where the range actually tested goes. Not filled in by the UI team.
+40. **Rest day ("I am too tired today").** Built as UI only (local state, labelled demo). A real version needs a new outcome type in CONTRACT.md, a BFF route with Zod validation and a FHIR mapping.
+41. **Badge, streak and journey thresholds** (7 days active, 10 ratings, 10 checklists, full week = 14 sessions of 2 a day) are behaviour counts chosen by the UI team, not clinical criteria. Confirm.
 ## Open: needed before later phases (not asked yet)
 - Hosted auth provider (the dev realm is in `docker/keycloak`).
 - Clinician roles beyond `clinician` and `admin`, and the hosting target.
