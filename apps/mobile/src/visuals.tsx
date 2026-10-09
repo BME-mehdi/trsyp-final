@@ -1,7 +1,9 @@
-import { colors, space, warm } from '@symbiomed/ui-tokens'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import { colors, motion, space, warm } from '@symbiomed/ui-tokens'
 import { useEffect, useRef } from 'react'
 import { Animated, Easing, View } from 'react-native'
 import Svg, { Circle, Path } from 'react-native-svg'
+import { Pop } from './anim'
 import { useMotion } from './motion'
 import { Txt } from './ui'
 
@@ -10,23 +12,29 @@ import { Txt } from './ui'
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
 /** A ring that fills from 0 to `value` (0..1). With reduce motion on, it is drawn filled at once. */
-export function Ring({ value, size = 72, label, state }: { value: number; size?: number; label: string; state: string }) {
-  const { duration } = useMotion()
+export function Ring({ value, size = 72, label, state, delay = 0 }: { value: number; size?: number; label: string; state: string; delay?: number }) {
+  const { reduce } = useMotion()
   const stroke = 8, r = (size - stroke) / 2, c = 2 * Math.PI * r
   const fill = useRef(new Animated.Value(0)).current
   useEffect(() => {
-    const ms = duration('slow')
-    if (ms === 0) fill.setValue(value)
-    else Animated.timing(fill, { toValue: value, duration: ms, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start()
-  }, [value, duration, fill])
+    if (reduce) fill.setValue(value)
+    else Animated.timing(fill, { toValue: value, duration: motion.duration.slow, delay, easing: Easing.out(Easing.cubic), useNativeDriver: false }).start()
+  }, [value, reduce, fill, delay])
   const offset = fill.interpolate({ inputRange: [0, 1], outputRange: [c, 0] })
   return (
     <View accessible accessibilityLabel={`${label}: ${state}`} style={{ alignItems: 'center', gap: space.xs, flex: 1, minWidth: size }}>
-      <Svg width={size} height={size} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-        <Circle cx={size / 2} cy={size / 2} r={r} stroke={warm.track} strokeWidth={stroke} fill="none" />
-        <AnimatedCircle cx={size / 2} cy={size / 2} r={r} stroke={warm.fill} strokeWidth={stroke} fill="none" strokeLinecap="round"
-          strokeDasharray={`${c} ${c}`} strokeDashoffset={offset} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
-      </Svg>
+      <View style={{ width: size, height: size }}>
+        <Svg width={size} height={size} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+          <Circle cx={size / 2} cy={size / 2} r={r} stroke={warm.track} strokeWidth={stroke} fill="none" />
+          <AnimatedCircle cx={size / 2} cy={size / 2} r={r} stroke={warm.fill} strokeWidth={stroke} fill="none" strokeLinecap="round"
+            strokeDasharray={`${c} ${c}`} strokeDashoffset={offset} transform={`rotate(-90 ${size / 2} ${size / 2})`} />
+        </Svg>
+        <View pointerEvents="none" style={{ position: 'absolute', top: 0, left: 0, width: size, height: size, alignItems: 'center', justifyContent: 'center' }}>
+          <Pop show={value >= 1} delay={delay + motion.duration.slow}>
+            <Ionicons name="checkmark" size={Math.round(size * 0.42)} color={warm.fill} accessibilityElementsHidden importantForAccessibility="no" />
+          </Pop>
+        </View>
+      </View>
       <Txt bold style={{ textAlign: 'center' }}>{label}</Txt>
       <Txt size="small" muted style={{ textAlign: 'center' }}>{state}</Txt>
     </View>

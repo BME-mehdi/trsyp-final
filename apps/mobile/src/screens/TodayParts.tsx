@@ -1,9 +1,10 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { badges, weeklyRecap, type EngagementInput, type TodayRings } from '@symbiomed/domain'
-import { colors, iconSize, radius, space, status, touchTarget, warm } from '@symbiomed/ui-tokens'
+import { PROGRAM_WEEKS, badges, weeklyRecap, type BadgeId, type EngagementInput, type TodayRings } from '@symbiomed/domain'
+import { colors, elevation, iconSize, radius, radiusLg, space, status, touchTarget, warm } from '@symbiomed/ui-tokens'
 import { router } from 'expo-router'
-import { useState } from 'react'
+import { useState, type ComponentProps } from 'react'
 import { Pressable, View } from 'react-native'
+import { FadeIn } from '../anim'
 import { REST_REASONS, addRestDay, needsGuidance, type RestReason } from '../rest'
 import { useSettings } from '../settings'
 import { Button, Card, Txt } from '../ui'
@@ -17,8 +18,8 @@ export function TodayRingsCard({ rings }: { rings: TodayRings }) {
       <Txt bold>{t('today.rings')}</Txt>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.md, justifyContent: 'space-around' }}>
         <Ring value={rings.sessionsDone >= 1 ? 1 : 0} label={t('today.ring.session1')} state={st(rings.sessionsDone >= 1)} />
-        <Ring value={rings.sessionsDone >= 2 ? 1 : 0} label={t('today.ring.session2')} state={st(rings.sessionsDone >= 2)} />
-        <Ring value={rings.rated ? 1 : 0} label={t('today.ring.rating')} state={st(rings.rated)} />
+        <Ring delay={120} value={rings.sessionsDone >= 2 ? 1 : 0} label={t('today.ring.session2')} state={st(rings.sessionsDone >= 2)} />
+        <Ring delay={240} value={rings.rated ? 1 : 0} label={t('today.ring.rating')} state={st(rings.rated)} />
       </View>
     </Card>
   )
@@ -52,25 +53,80 @@ export function RecapCard({ input, title }: { input: EngagementInput; title: 're
   )
 }
 
+type IconName = ComponentProps<typeof Ionicons>['name']
+const BADGE_ICON: Record<BadgeId, [earned: IconName, locked: IconName]> = {
+  'first-session': ['play-circle', 'play-circle-outline'],
+  'first-full-day': ['sunny', 'sunny-outline'],
+  'seven-days-active': ['calendar', 'calendar-outline'],
+  'ten-ratings': ['chatbubble-ellipses', 'chatbubble-ellipses-outline'],
+  'ten-checklists': ['checkbox', 'checkbox-outline'],
+  'full-week': ['trophy', 'trophy-outline'],
+}
+
+/** Badge medallions, two per row. Earned ones are filled; locked ones show progress as text and a thin bar. */
 export function BadgeList({ input }: { input: EngagementInput }) {
   const { t } = useSettings()
+  const list = badges(input)
+  const earnedCount = list.filter((b) => b.earned).length
   return (
     <Card>
-      <Txt bold>{t('badges.title')}</Txt>
-      {badges(input).map((b) => {
-        const state = b.earned === null ? t('badge.notTracked') : b.earned ? t('badge.earned') : t('badge.progress', { count: Math.min(b.count ?? 0, b.target), target: b.target })
-        return (
-          <View key={b.id} accessible accessibilityLabel={`${t(`badge.${b.id}`)}: ${state}`}
-            style={{ flexDirection: 'row', alignItems: 'center', gap: space.md, padding: space.sm, borderRadius: radius.md, backgroundColor: b.earned ? warm.badgeBg : 'transparent' }}>
-            <Ionicons name={b.earned ? 'ribbon' : b.earned === null ? 'time-outline' : 'ribbon-outline'} size={iconSize.lg} color={b.earned ? warm.ink : colors.textMuted} accessibilityElementsHidden importantForAccessibility="no" />
-            <View style={{ flex: 1 }}>
-              <Txt bold>{t(`badge.${b.id}`)}</Txt>
-              <Txt size="small" muted={!b.earned} style={b.earned ? { color: warm.ink } : undefined}>{state}</Txt>
-            </View>
-          </View>
-        )
-      })}
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: space.sm }}>
+        <Txt bold accessibilityRole="header">{t('badges.title')}</Txt>
+        <Txt size="small" bold style={{ color: warm.ink }}>{t('badge.progress', { count: earnedCount, target: list.length })}</Txt>
+      </View>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.md }}>
+        {list.map((b, i) => {
+          const state = b.earned === null ? t('badge.notTracked') : b.earned ? t('badge.earned') : t('badge.progress', { count: Math.min(b.count ?? 0, b.target), target: b.target })
+          const [on, off] = BADGE_ICON[b.id]
+          const pct = b.count === null ? 0 : Math.min(100, (100 * b.count) / b.target)
+          return (
+            <FadeIn key={b.id} index={i} style={{ flexGrow: 1, flexBasis: '45%', minWidth: 140 }}>
+              <View accessible accessibilityLabel={`${t(`badge.${b.id}`)}: ${state}`}
+                style={{ alignItems: 'center', gap: space.xs, padding: space.md, borderRadius: radiusLg.lg, backgroundColor: b.earned ? warm.badgeBg : colors.surface }}>
+                <View style={{ width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', backgroundColor: b.earned ? warm.fill : colors.background, borderWidth: b.earned ? 0 : 2, borderColor: colors.divider }}>
+                  <Ionicons name={b.earned ? on : off} size={iconSize.lg} color={b.earned ? colors.onAccent : colors.textMuted} accessibilityElementsHidden importantForAccessibility="no" />
+                </View>
+                <Txt bold style={{ textAlign: 'center' }}>{t(`badge.${b.id}`)}</Txt>
+                <Txt size="small" style={{ textAlign: 'center', color: b.earned ? warm.ink : colors.textMuted }}>{state}</Txt>
+                {b.earned === false && (
+                  <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ alignSelf: 'stretch', height: 6, borderRadius: 3, backgroundColor: warm.track, overflow: 'hidden' }}>
+                    <View style={{ width: `${pct}%`, height: '100%', backgroundColor: warm.fill }} />
+                  </View>
+                )}
+              </View>
+            </FadeIn>
+          )
+        })}
+      </View>
     </Card>
+  )
+}
+
+/** Greeting, program week as six segments, and gentle streak text. Accent surface, white text (pair in the contrast test). */
+export function HeroCard({ week, streakDays, daysActiveWeek, hasHistory }: { week: number | null; streakDays: number; daysActiveWeek: number | null; hasHistory: boolean }) {
+  const { t } = useSettings()
+  const on = { color: colors.onAccent }
+  return (
+    <View style={{ backgroundColor: colors.accent, borderRadius: radiusLg.xl, padding: space.xl, gap: space.md, ...elevation.mid.rn }}>
+      <Txt size="title" bold style={on}>{t('today.hello')}</Txt>
+      {week !== null && (
+        <View style={{ gap: space.sm }} accessible accessibilityLabel={t('progress.week', { week })}>
+          <Txt bold style={on}>{t('progress.week', { week })}</Txt>
+          <View style={{ flexDirection: 'row', gap: space.xs }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            {Array.from({ length: PROGRAM_WEEKS }, (_, i) => (
+              <View key={i} style={{ flex: 1, height: 8, borderRadius: 4, backgroundColor: i < week ? colors.onAccent : 'rgba(255,255,255,0.3)' }} />
+            ))}
+          </View>
+        </View>
+      )}
+      {(streakDays > 0 || hasHistory) && (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: space.sm }}>
+          <Ionicons name="leaf" size={iconSize.md} color={colors.onAccent} accessibilityElementsHidden importantForAccessibility="no" />
+          <Txt style={[on, { flexShrink: 1 }]}>{streakDays > 0 ? t('today.streak', { days: streakDays }) : t('today.welcomeBack')}</Txt>
+        </View>
+      )}
+      {daysActiveWeek !== null && <Txt style={on}>{t('today.daysActiveWeek', { days: daysActiveWeek })}</Txt>}
+    </View>
   )
 }
 

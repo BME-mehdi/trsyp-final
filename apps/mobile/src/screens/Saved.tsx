@@ -7,6 +7,7 @@ import { useMotion } from '../motion'
 import { useSettings } from '../settings'
 import { Button, Card, Screen, Txt } from '../ui'
 import { Ring } from '../visuals'
+import { Pop } from '../anim'
 
 /**
  * After a rating is sent. Pain at or above the threshold: no celebration, the high-pain guidance only.
@@ -28,10 +29,10 @@ export function SavedScreen({ pain, sessions }: { pain: number | null; sessions:
       {high ? (
         <Card><Txt accessibilityRole="alert">{t('feedback.highPain')}</Txt><Button variant="secondary" label={t('emergency.title')} onPress={() => router.push('/emergency')} /></Card>
       ) : (
-        <Card tint={warm.surface}>
+        <Pop><Card tint={warm.surface}>
           <Ring value={1} size={96} label={t('today.ring.rating')} state={t('today.ring.done')} />
           <Txt bold style={{ color: warm.ink, textAlign: 'center' }}>{t('celebrate.rated', { done, total: LIMITS.sessionsPerDay })}</Txt>
-        </Card>
+        </Card></Pop>
       )}
       <Button label={t('common.continue')} onPress={() => router.replace('/')} />
     </Screen>

@@ -11,7 +11,8 @@ import { hoursMinutes, nextAction, todayView } from '../logic'
 import { useRestDays } from '../rest'
 import { useSettings } from '../settings'
 import { Button, Card, Chip, Screen, Txt } from '../ui'
-import { RecapCard, RestDayCard, StopChip, TodayRingsCard } from './TodayParts'
+import { FadeIn } from '../anim'
+import { HeroCard, RecapCard, RestDayCard, StopChip, TodayRingsCard } from './TodayParts'
 
 const Big = ({ label, value }: { label: string; value: string }) => (
   <View accessible accessibilityLabel={`${label}: ${value}`}>
@@ -44,11 +45,10 @@ export function TodayScreen() {
   const input: EngagementInput = { sessions: list, restDays: rest.map((r) => r.day), now, offsetMin }
   const today = dayKey(now, offsetMin)
   const week = programWeek(input)
-  const subtitle = week === null ? t('today.hello') : `${t('today.hello')}. ${t('progress.week', { week })}`
 
   if (view.kind !== 'active') {
     return (
-      <Screen title={t('plan.title')} subtitle={subtitle}>
+      <Screen title={t('nav.today')}>
         <StopChip />
         <Chip tone={view.kind === 'expired' ? 'critical' : 'neutral'} label={t(view.kind === 'expired' ? 'plan.status.expired' : 'plan.status.none')} />
         <Card>
@@ -65,9 +65,11 @@ export function TodayScreen() {
   const thisWeek = journey(input).find((w) => w.state === 'current')
   const restedToday = rest.some((r) => r.day === today)
   return (
-    <Screen title={t('plan.title')} subtitle={subtitle}>
-      <StopChip />
-      <TodayRingsCard rings={todayRings(input)} />
+    <Screen title={t('nav.today')}>
+      <FadeIn index={0}><HeroCard week={week} streakDays={s.days} daysActiveWeek={thisWeek?.daysActive ?? null} hasHistory={list.length > 0} /></FadeIn>
+      <FadeIn index={1}><StopChip /></FadeIn>
+      <FadeIn index={2}><TodayRingsCard rings={todayRings(input)} /></FadeIn>
+      <FadeIn index={3}>
       {restedToday ? (
         <Card><Txt bold>{t('rest.saved')}</Txt><Txt>{t('rest.planUnchanged')}</Txt><Txt size="small" muted>{t('rest.demo')}</Txt></Card>
       ) : action.kind === 'allDone' ? (
@@ -79,11 +81,9 @@ export function TodayScreen() {
       ) : (
         <Button label={t('today.next.checklist', { n: action.n })} onPress={() => router.push('/checklist')} />
       )}
-      <View style={{ gap: space.xs }}>
-        {s.days > 0 ? <Txt>{t('today.streak', { days: s.days })}</Txt> : list.length > 0 ? <Txt>{t('today.welcomeBack')}</Txt> : null}
-        {thisWeek?.daysActive != null && <Txt>{t('today.daysActiveWeek', { days: thisWeek.daysActive })}</Txt>}
-      </View>
-      {now.getDay() === 1 && <RecapCard input={input} title="recap.monday" />}
+      </FadeIn>
+      {now.getDay() === 1 && <FadeIn index={4}><RecapCard input={input} title="recap.monday" /></FadeIn>}
+      <FadeIn index={5}>
       <Card>
         <Pressable onPress={() => setPlanOpen((o) => !o)} accessibilityRole="button" accessibilityState={{ expanded: planOpen }} accessibilityLabel={t(planOpen ? 'today.planHide' : 'today.planShow')}
           style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.sm }}>
@@ -103,6 +103,7 @@ export function TodayScreen() {
           </>
         )}
       </Card>
+      </FadeIn>
       {!restedToday && (restOpen
         ? <RestDayCard today={today} onDone={() => setRestOpen(false)} />
         : <Button variant="secondary" label={t('today.restDay')} onPress={() => setRestOpen(true)} testID="rest-open" />)}

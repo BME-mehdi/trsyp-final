@@ -11,6 +11,7 @@ import { useSettings } from '../settings'
 import { Card, Screen, Txt } from '../ui'
 import { ArcGauge, Bar } from '../visuals'
 import { BadgeList, RecapCard } from './TodayParts'
+import { FadeIn } from '../anim'
 
 /** Goal shown to the patient: 110° at week 6, to confirm (docs/OPEN_QUESTIONS.md item 16). */
 export const FLEXION_GOAL_DEG = 110
@@ -52,7 +53,7 @@ export function ProgressScreen() {
   const latest = p.flexion.latest === null ? null : Math.round(p.flexion.latest)
   return (
     <Screen title={t('progress.title')} subtitle={p.week !== null ? t('progress.week', { week: p.week }) : undefined}>
-      <Card>
+      <FadeIn><Card>
         <Txt bold>{t('progress.flexion')}</Txt>
         {latest === null ? <Txt>{t('progress.noData')}</Txt> : (
           <>
@@ -61,12 +62,12 @@ export function ProgressScreen() {
             <Txt size="small" muted style={{ textAlign: 'center' }}>{t('progress.goalToConfirm')}</Txt>
           </>
         )}
-      </Card>
-      <Card>
+      </Card></FadeIn>
+      <FadeIn><Card>
         <Txt bold accessibilityRole="header">{t('journey.title')}</Txt>
         {weeks.map((w, i) => <Station key={w.week} w={w} last={i === weeks.length - 1} />)}
-      </Card>
-      <Card>
+      </Card></FadeIn>
+      <FadeIn><Card>
         <Txt bold>{t('progress.adherence')}</Txt>
         <Txt size="large" bold>{t('progress.adherenceValue', { done: p.adherence.done, planned: p.adherence.planned })}</Txt>
         <Txt>{t('progress.adherenceHelp')}</Txt>
@@ -74,15 +75,15 @@ export function ProgressScreen() {
         {weeks.filter((w) => w.sessions !== null).map((w) => (
           <Bar key={w.week} value={(w.sessions ?? 0) / w.planned} label={t('progress.weekBar', { week: w.week, done: w.sessions ?? 0, planned: w.planned })} />
         ))}
-      </Card>
+      </Card></FadeIn>
       <RecapCard input={input} title="recap.title" />
       <BadgeList input={input} />
-      <Card>
+      <FadeIn><Card>
         <Txt bold>{t('progress.engagement')}</Txt>
         <Txt size="display" bold>{p.engagementPct === null ? '–' : t('progress.engagementValue', { value: p.engagementPct })}</Txt>
         <Txt>{t('progress.engagementHelp')}</Txt>
-      </Card>
-      <Card>
+      </Card></FadeIn>
+      <FadeIn><Card>
         <Txt bold>{t('soon.title')}</Txt>
         <Txt size="small" muted>{t('soon.note')}</Txt>
         {(['soon.exercises', 'soon.tens', 'soon.guide'] as const).map((k) => (
@@ -91,7 +92,7 @@ export function ProgressScreen() {
             <Txt muted style={{ flexShrink: 1 }}>{t(k)}</Txt>
           </View>
         ))}
-      </Card>
+      </Card></FadeIn>
     </Screen>
   )
 }

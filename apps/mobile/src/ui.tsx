@@ -1,6 +1,7 @@
 import { colors, elevation, fontFamily, fontSize, page, radius, radiusLg, space, status, touchTarget, type StatusTone } from '@symbiomed/ui-tokens'
 import type { ReactNode } from 'react'
-import { Pressable, ScrollView, StyleSheet, Text, View, type TextProps } from 'react-native'
+import { Animated, Pressable, ScrollView, StyleSheet, Text, View, type TextProps } from 'react-native'
+import { usePressScale } from './anim'
 import { useSettings } from './settings'
 
 // Text follows the system font size (no maxFontSizeMultiplier, no fixed lineHeight, so 200 % does not clip)
@@ -13,12 +14,15 @@ export function Txt({ size = 'body', bold, muted, style, ...p }: TextProps & { s
 
 export function Button({ label, onPress, disabled, variant = 'primary', hint, testID, icon }: { label: string; onPress: () => void; disabled?: boolean; variant?: 'primary' | 'secondary'; hint?: string; testID?: string; icon?: ReactNode }) {
   const primary = variant === 'primary'
+  const press = usePressScale()
   return (
-    <Pressable onPress={onPress} disabled={disabled} accessibilityRole="button" accessibilityLabel={label} accessibilityHint={hint} accessibilityState={{ disabled: !!disabled }} testID={testID}
+    <Animated.View style={press.style}>
+    <Pressable onPressIn={press.onPressIn} onPressOut={press.onPressOut} onPress={onPress} disabled={disabled} accessibilityRole="button" accessibilityLabel={label} accessibilityHint={hint} accessibilityState={{ disabled: !!disabled }} testID={testID}
       style={({ pressed }) => [styles.button, primary ? styles.primary : styles.secondary, disabled && styles.disabled, pressed && { opacity: 0.85 }]}>
       {icon}
       <Txt bold size={primary ? 'large' : 'body'} style={{ color: disabled ? status.neutral.fg : primary ? colors.onAccent : colors.text, textAlign: 'center', flexShrink: 1 }}>{label}</Txt>
     </Pressable>
+    </Animated.View>
   )
 }
 
