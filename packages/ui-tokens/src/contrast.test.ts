@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { colors, status } from './index'
+import { colors, page, status, warm } from './index'
 
 // WCAG 2.x relative luminance and contrast ratio.
 const luminance = (hex: string) => {
@@ -28,6 +28,11 @@ describe('contrast (WCAG 2.2 AA)', () => {
       ['textMuted/surface', colors.textMuted, colors.surface],
       ['accent/background', colors.accent, colors.background],
       ['onAccent/accent', colors.onAccent, colors.accent],
+      ['warm ink/warm surface', warm.ink, warm.surface],
+      ['warm ink/badge', warm.ink, warm.badgeBg],
+      ['text/patient page', colors.text, page.patient],
+      ['textMuted/patient page', colors.textMuted, page.patient],
+      ['accent/patient page', colors.accent, page.patient],
       ...Object.entries(status).flatMap(([tone, c]): [string, string, string][] => [
         [`${tone} chip`, c.fg, c.bg],
         [`${tone} on background`, c.fg, colors.background],
@@ -38,5 +43,7 @@ describe('contrast (WCAG 2.2 AA)', () => {
 
   it('gives control borders and the focus ring at least 3:1', () => {
     for (const c of [colors.control, colors.focus]) expect(contrast(c, colors.background)).toBeGreaterThanOrEqual(3)
+    // Progress fills are graphics (WCAG 1.4.11): 3:1 against the page, the card and their track.
+    for (const bg of [colors.background, page.patient, warm.surface, warm.track]) expect(contrast(warm.fill, bg)).toBeGreaterThanOrEqual(3)
   })
 })

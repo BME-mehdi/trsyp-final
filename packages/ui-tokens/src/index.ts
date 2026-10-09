@@ -39,3 +39,38 @@ export const lineHeight = 1.4
 export const fontWeight = { regular: '400', semibold: '600' } as const
 /** Minimum touch target, pt (CLAUDE.md, WCAG 2.5.8 asks for at least 24). */
 export const touchTarget = 44
+
+// ---- Extensions (UI elevation). The accent and the five status tones above stay as they are. ----
+
+/**
+ * Warm secondary palette, patient app only: progress fills, celebration and badges. Never used for
+ * status, so it cannot be confused with the five tones. Pairs are in the contrast test.
+ */
+export const warm = {
+  fill: '#a8501f', // ring and bar fills (graphic, 3:1 on background and track)
+  track: '#f3e4d8', // empty part of a ring or bar (decorative)
+  surface: '#fbf4ee', // celebration and recap cards
+  ink: '#7a3510', // text on warm surfaces
+  badgeBg: '#f6e6da', // earned badge
+} as const
+
+/** Soft page tint behind cards on the patient app. */
+export const page = { patient: '#f7f5f2' } as const
+
+/** Elevation: CSS box-shadow for the web, shadow props for React Native. */
+export const elevation = {
+  low: { css: '0 1px 2px rgb(26 31 36 / 0.06), 0 1px 3px rgb(26 31 36 / 0.08)', rn: { shadowColor: '#1a1f24', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 2 } },
+  mid: { css: '0 4px 12px rgb(26 31 36 / 0.10)', rn: { shadowColor: '#1a1f24', shadowOpacity: 0.12, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 4 } },
+} as const
+
+/** Motion: every duration is under 400 ms; with reduce motion on, apps use 0 (static equivalent). */
+export const motion = {
+  duration: { fast: 150, base: 250, slow: 380 },
+  easing: { standard: [0.2, 0, 0, 1], decelerate: [0, 0, 0, 1] },
+} as const
+
+export const iconSize = { sm: 18, md: 24, lg: 32, xl: 44 } as const
+export const radiusLg = { lg: 16, xl: 24 } as const
+
+/** Atkinson Hyperlegible (Braille Institute, designed for low-vision readers). Names as loaded by expo-font. */
+export const fontFamily = { regular: 'AtkinsonHyperlegible_400Regular', bold: 'AtkinsonHyperlegible_700Bold' } as const
