@@ -6,7 +6,7 @@ export default async function PatientLayout({ children, params }: { children: Re
   return (
     <>
       <PatientNav patientId={id} />
-      {children}
+      <div className="rounded-xl border border-divider bg-page p-6">{children}</div>
     </>
   )
 }

@@ -1,6 +1,9 @@
 import { motion } from '@symbiomed/ui-tokens'
 import { useEffect, useRef, type ReactNode } from 'react'
-import { Animated, Easing, type StyleProp, type ViewStyle } from 'react-native'
+import { Animated, Easing, Platform, type StyleProp, type ViewStyle } from 'react-native'
+
+// The native driver does not exist on web (the browser demo); there the JS driver runs the same animation.
+const NATIVE = Platform.OS !== 'web'
 import { useMotion } from './motion'
 
 // Small motion building blocks (all under 400 ms, all static with reduce motion on).
@@ -11,7 +14,7 @@ export function FadeIn({ children, index = 0, style }: { children: ReactNode; in
   const v = useRef(new Animated.Value(reduce ? 1 : 0)).current
   useEffect(() => {
     if (reduce) { v.setValue(1); return }
-    Animated.timing(v, { toValue: 1, duration: motion.duration.base, delay: Math.min(index, 5) * 60, easing: Easing.out(Easing.cubic), useNativeDriver: true }).start()
+    Animated.timing(v, { toValue: 1, duration: motion.duration.base, delay: Math.min(index, 5) * 60, easing: Easing.out(Easing.cubic), useNativeDriver: NATIVE }).start()
   }, [reduce, index, v])
   return <Animated.View style={[style, { opacity: v, transform: [{ translateY: v.interpolate({ inputRange: [0, 1], outputRange: [8, 0] }) }] }]}>{children}</Animated.View>
 }
@@ -23,7 +26,7 @@ export function Pop({ children, show = true, delay = 0 }: { children: ReactNode;
   useEffect(() => {
     if (!show) { v.setValue(0); return }
     if (reduce) { v.setValue(1); return }
-    Animated.sequence([Animated.delay(delay), Animated.spring(v, { toValue: 1, damping: 12, stiffness: 220, mass: 0.6, useNativeDriver: true })]).start()
+    Animated.sequence([Animated.delay(delay), Animated.spring(v, { toValue: 1, damping: 12, stiffness: 220, mass: 0.6, useNativeDriver: NATIVE })]).start()
   }, [show, reduce, delay, v])
   if (!show) return null
   return <Animated.View style={{ opacity: v, transform: [{ scale: v.interpolate({ inputRange: [0, 1], outputRange: [0.6, 1] }) }] }}>{children}</Animated.View>
@@ -33,6 +36,6 @@ export function Pop({ children, show = true, delay = 0 }: { children: ReactNode;
 export function usePressScale() {
   const { reduce } = useMotion()
   const s = useRef(new Animated.Value(1)).current
-  const to = (toValue: number) => { if (!reduce) Animated.spring(s, { toValue, damping: 18, stiffness: 400, mass: 0.5, useNativeDriver: true }).start() }
+  const to = (toValue: number) => { if (!reduce) Animated.spring(s, { toValue, damping: 18, stiffness: 400, mass: 0.5, useNativeDriver: NATIVE }).start() }
   return { onPressIn: () => to(0.97), onPressOut: () => to(1), style: { transform: [{ scale: s }] } }
 }

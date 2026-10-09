@@ -170,7 +170,10 @@ export const fr: Record<MessageKey, string> = {
   'sync.sessionsUploaded': 'Séances envoyées\u00a0: {count}',
 
   'today.hello': 'Bonjour',
-  'today.rings': 'Aujourd’hui',
+  'today.morning': 'Bonjour',
+  'today.afternoon': 'Bon après-midi',
+  'today.evening': 'Bonsoir',
+  'today.rings': 'Vos séances aujourd’hui',
   'today.ring.session1': 'Séance 1',
   'today.ring.session2': 'Séance 2',
   'today.ring.rating': 'Évaluation',

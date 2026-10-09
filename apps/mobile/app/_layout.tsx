@@ -20,8 +20,9 @@ function Gate() {
   return (
     <Stack screenOptions={{ headerBackTitle: t('common.back') }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="checklist" options={{ title: t('checklist.title') }} />
-      <Stack.Screen name="after-session" options={{ title: t('feedback.title') }} />
+      {/* The screen draws its own large title; the header keeps the back button and an accessible title. */}
+      <Stack.Screen name="checklist" options={{ title: t('checklist.title'), headerTitle: '' }} />
+      <Stack.Screen name="after-session" options={{ title: t('feedback.title'), headerTitle: '' }} />
     </Stack>
   )
 }

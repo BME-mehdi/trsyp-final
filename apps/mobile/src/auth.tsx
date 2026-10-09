@@ -2,6 +2,7 @@ import * as AuthSession from 'expo-auth-session'
 import * as LocalAuthentication from 'expo-local-authentication'
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { AppState } from 'react-native'
+import { DEMO } from './demo'
 import { KEYS, read, wipe, write } from './storage'
 
 export const CONFIG = {
@@ -10,6 +11,8 @@ export const CONFIG = {
   clientId: process.env.EXPO_PUBLIC_OIDC_CLIENT_ID ?? 'symbiomed-mobile',
   mock: process.env.EXPO_PUBLIC_MOCK === '1',
 }
+/** Demo mode never contacts an identity provider: a static document stops the discovery request. */
+export const DEMO_DISCOVERY: AuthSession.DiscoveryDocument = { authorizationEndpoint: 'about:blank' }
 export const redirectUri = () => AuthSession.makeRedirectUri({ scheme: 'symbiomed', path: 'auth/callback' })
 
 type Status = 'loading' | 'signed-out' | 'locked' | 'signed-in'
@@ -37,7 +40,7 @@ export function patientIdOf(token: string): string | null {
 export function AuthProvider({ children, biometric, onSignedOut }: { children: ReactNode; biometric: boolean; onSignedOut: () => void }) {
   const [status, setStatus] = useState<Status>('loading')
   const [patientId, setPatientId] = useState<string | null>(null)
-  const discovery = AuthSession.useAutoDiscovery(CONFIG.issuer)
+  const discovery = AuthSession.useAutoDiscovery(DEMO ? DEMO_DISCOVERY : CONFIG.issuer)
   const biometricRef = useRef(biometric)
   biometricRef.current = biometric
 

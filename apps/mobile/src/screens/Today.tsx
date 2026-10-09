@@ -66,7 +66,7 @@ export function TodayScreen() {
   const restedToday = rest.some((r) => r.day === today)
   return (
     <Screen title={t('nav.today')}>
-      <FadeIn index={0}><HeroCard week={week} streakDays={s.days} daysActiveWeek={thisWeek?.daysActive ?? null} hasHistory={list.length > 0} /></FadeIn>
+      <FadeIn index={0}><HeroCard hour={now.getHours()} week={week} streakDays={s.days} daysActiveWeek={thisWeek?.daysActive ?? null} hasHistory={list.length > 0} /></FadeIn>
       <FadeIn index={1}><StopChip /></FadeIn>
       <FadeIn index={2}><TodayRingsCard rings={todayRings(input)} /></FadeIn>
       <FadeIn index={3}>
@@ -87,7 +87,7 @@ export function TodayScreen() {
       <Card>
         <Pressable onPress={() => setPlanOpen((o) => !o)} accessibilityRole="button" accessibilityState={{ expanded: planOpen }} accessibilityLabel={t(planOpen ? 'today.planHide' : 'today.planShow')}
           style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: space.sm }}>
-          <Txt bold style={{ flexShrink: 1 }}>{t(planOpen ? 'today.planHide' : 'today.planShow')}</Txt>
+          <Txt size="large" bold style={{ flexShrink: 1 }}>{t('plan.title')}</Txt>
           <Ionicons name={planOpen ? 'chevron-up' : 'chevron-down'} size={iconSize.md} color={colors.text} accessibilityElementsHidden importantForAccessibility="no" />
         </Pressable>
         <Chip tone="positive" label={t('plan.status.approved')} />

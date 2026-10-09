@@ -15,7 +15,7 @@ export default function TabsLayout() {
     tabBarIcon: ({ color, focused }: { color: ColorValue; focused: boolean }) => <Ionicons name={focused ? iconActive : icon} size={iconSize.md} color={color as string} accessibilityElementsHidden importantForAccessibility="no" />,
   })
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: colors.accent, tabBarInactiveTintColor: colors.textMuted, tabBarLabelStyle: { fontSize: fontSize.small, fontFamily: fontFamily.bold }, tabBarStyle: { minHeight: 64, paddingTop: 4 }, headerTitleStyle: { fontFamily: fontFamily.bold } }}>
+    <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: colors.accent, tabBarInactiveTintColor: colors.textMuted, tabBarLabelStyle: { fontSize: fontSize.small, fontFamily: fontFamily.regular }, tabBarStyle: { minHeight: 64, paddingTop: 4 }, headerTitleStyle: { fontFamily: fontFamily.bold } }}>
       <Tabs.Screen name="index" options={tab('nav.today', 'sunny-outline', 'sunny')} />
       <Tabs.Screen name="progress" options={tab('nav.progress', 'trending-up-outline', 'trending-up')} />
       <Tabs.Screen name="brace" options={tab('nav.brace', 'bluetooth-outline', 'bluetooth')} />

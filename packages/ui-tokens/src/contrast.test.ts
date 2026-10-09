@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { colors, page, status, warm } from './index'
+import { colors, deep, page, status, warm } from './index'
 
 // WCAG 2.x relative luminance and contrast ratio.
 const luminance = (hex: string) => {
@@ -29,6 +29,8 @@ describe('contrast (WCAG 2.2 AA)', () => {
       ['accent/background', colors.accent, colors.background],
       ['onAccent/accent', colors.onAccent, colors.accent],
       ['warm ink/warm surface', warm.ink, warm.surface],
+      ['onAccent/deep', colors.onAccent, deep],
+      ['onAccent 85 % on deep (approx. as text/deep)', '#dbe2e6', deep],
       ['warm ink/badge', warm.ink, warm.badgeBg],
       ['text/patient page', colors.text, page.patient],
       ['textMuted/patient page', colors.textMuted, page.patient],

@@ -103,12 +103,12 @@ export function BadgeList({ input }: { input: EngagementInput }) {
 }
 
 /** Greeting, program week as six segments, and gentle streak text. Accent surface, white text (pair in the contrast test). */
-export function HeroCard({ week, streakDays, daysActiveWeek, hasHistory }: { week: number | null; streakDays: number; daysActiveWeek: number | null; hasHistory: boolean }) {
+export function HeroCard({ hour, week, streakDays, daysActiveWeek, hasHistory }: { hour: number; week: number | null; streakDays: number; daysActiveWeek: number | null; hasHistory: boolean }) {
   const { t } = useSettings()
   const on = { color: colors.onAccent }
   return (
     <View style={{ backgroundColor: colors.accent, borderRadius: radiusLg.xl, padding: space.xl, gap: space.md, ...elevation.mid.rn }}>
-      <Txt size="title" bold style={on}>{t('today.hello')}</Txt>
+      <Txt size="title" bold style={on}>{t(hour < 12 ? 'today.morning' : hour < 18 ? 'today.afternoon' : 'today.evening')}</Txt>
       {week !== null && (
         <View style={{ gap: space.sm }} accessible accessibilityLabel={t('progress.week', { week })}>
           <Txt bold style={on}>{t('progress.week', { week })}</Txt>

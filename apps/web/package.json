@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "dev:mock": "cross-env MOCK_MODE=1 next dev",
+    "demo": "cross-env MOCK_MODE=1 DEMO_SKIP_OTP=1 next dev",
     "build": "next build",
     "typecheck": "tsc -p .",
     "test": "vitest run",

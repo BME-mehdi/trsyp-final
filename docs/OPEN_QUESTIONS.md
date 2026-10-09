@@ -124,3 +124,8 @@ Skipped:
 - Dark theme; Arabic strings and right-to-left layout.
 - `docs/PLAN.md` was never written (the planning run was interrupted).
 - The spec PDF is at the repository root, while CLAUDE.md expects it in `docs/`. `claude.md` is lowercase, so Claude Code does not load it automatically.
+
+## Demo mode (2026-10-09, for the demo video)
+- `pnpm demo` (clinician web): mock mode **without the one-time code**. The session records `demo-no-otp`, never `otp`; only this mode accepts it for plan approval. `pnpm dev:mock` and e2e keep the real check.
+- `pnpm demo:patient` (patient app in a browser, Expo web): synthetic fixture data in memory (`EXPO_PUBLIC_DEMO=1`), no server, no sign-in, no Bluetooth. A rating updates the data until reload.
+- Neither mode exists in a real build. Remove both before any use beyond the demo.

@@ -57,6 +57,9 @@ export const warm = {
 /** Soft page tint behind cards on the patient app. */
 export const page = { patient: '#f7f5f2' } as const
 
+/** Deep accent for the clinician sign-in panel and sidebar brand (white text on it, pair in the contrast test). */
+export const deep = '#0f3a57'
+
 /** Elevation: CSS box-shadow for the web, shadow props for React Native. */
 export const elevation = {
   low: { css: '0 1px 2px rgb(26 31 36 / 0.06), 0 1px 3px rgb(26 31 36 / 0.08)', rn: { shadowColor: '#1a1f24', shadowOpacity: 0.08, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 2 } },

@@ -170,7 +170,10 @@ export const en = {
 
   // UI elevation: Today, journey, badges, rest day (rehab-gamification skill: behaviours only, no medical claims).
   'today.hello': 'Hello',
-  'today.rings': 'Today',
+  'today.morning': 'Good morning',
+  'today.afternoon': 'Good afternoon',
+  'today.evening': 'Good evening',
+  'today.rings': 'Your sessions today',
   'today.ring.session1': 'Session 1',
   'today.ring.session2': 'Session 2',
   'today.ring.rating': 'Rating',
