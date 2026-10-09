@@ -5,7 +5,7 @@ import { LIMITS, type SessionSummary } from '@symbiomed/domain'
 
 const HOUR = 3_600_000
 const WEEK = 7 * 24 * HOUR
-/** Flag a plan that expires within this many hours (UI choice, docs/OPEN_QUESTIONS.md "Left for after submission"). */
+/** Flag a plan that expires within this many hours (UI elevation brief: "plan expiring within 12 h"). */
 export const EXPIRING_WITHIN_H = 12
 
 export type FlagId = 'high-pain' | 'stop-press' | 'expiring' | 'expired' | 'no-plan'
