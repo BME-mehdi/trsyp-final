@@ -230,4 +230,7 @@ export const fr: Record<MessageKey, string> = {
   'soon.exercises': 'Exercices à domicile choisis par votre kinésithérapeute',
   'soon.tens': 'Mode antidouleur',
   'soon.guide': 'Guide pas à pas pendant une séance',
+  'stats.streak': 'Jours d’affilée',
+  'stats.sessions': 'Séances faites',
+  'stats.badges': 'Badges obtenus',
 }

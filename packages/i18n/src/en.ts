@@ -230,6 +230,9 @@ export const en = {
   'soon.exercises': 'Home exercises chosen by your physiotherapist',
   'soon.tens': 'Pain-relief mode',
   'soon.guide': 'Step-by-step guide during a session',
+  'stats.streak': 'Days in a row',
+  'stats.sessions': 'Sessions done',
+  'stats.badges': 'Badges earned',
 } satisfies Record<string, string>
 
 export type MessageKey = keyof typeof en

@@ -1,5 +1,5 @@
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { journey, type EngagementInput, type JourneyWeek } from '@symbiomed/domain'
+import { badges, journey, streak, type EngagementInput, type JourneyWeek } from '@symbiomed/domain'
 import { colors, iconSize, radius, space, warm } from '@symbiomed/ui-tokens'
 import { useQuery } from '@tanstack/react-query'
 import { View } from 'react-native'
@@ -36,6 +36,17 @@ function Station({ w, last }: { w: JourneyWeek; last: boolean }) {
   )
 }
 
+/** A stat tile: the number is written, the icon only decorates. Wraps to one per row at large text sizes. */
+function Stat({ icon, value, label }: { icon: React.ComponentProps<typeof Ionicons>['name']; value: number; label: string }) {
+  return (
+    <View accessible accessibilityLabel={`${label}: ${value}`} style={{ flexGrow: 1, flexBasis: 96, alignItems: 'center', gap: space.xs, padding: space.md, borderRadius: radius.md, backgroundColor: warm.surface }}>
+      <Ionicons name={icon} size={iconSize.md} color={warm.fill} accessibilityElementsHidden importantForAccessibility="no" />
+      <Txt size="display" bold style={{ color: warm.ink }}>{value}</Txt>
+      <Txt size="small" style={{ textAlign: 'center', color: warm.ink }}>{label}</Txt>
+    </View>
+  )
+}
+
 export function ProgressScreen() {
   const { t } = useSettings()
   const api = useApi()
@@ -51,8 +62,16 @@ export function ProgressScreen() {
   const input: EngagementInput = { sessions: sessions.data.sessions, restDays: rest.map((r) => r.day), now, offsetMin: -now.getTimezoneOffset() }
   const weeks = journey(input)
   const latest = p.flexion.latest === null ? null : Math.round(p.flexion.latest)
+  const earned = badges(input).filter((b) => b.earned).length
   return (
     <Screen title={t('progress.title')} subtitle={p.week !== null ? t('progress.week', { week: p.week }) : undefined}>
+      <FadeIn>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: space.sm }}>
+          <Stat icon="leaf" value={streak(input).days} label={t('stats.streak')} />
+          <Stat icon="checkmark-done" value={sessions.data.sessions.length} label={t('stats.sessions')} />
+          <Stat icon="ribbon" value={earned} label={t('stats.badges')} />
+        </View>
+      </FadeIn>
       <FadeIn><Card>
         <Txt bold>{t('progress.flexion')}</Txt>
         {latest === null ? <Txt>{t('progress.noData')}</Txt> : (
